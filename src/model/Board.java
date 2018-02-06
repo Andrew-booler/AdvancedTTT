@@ -87,25 +87,10 @@ public class Board {
 			}
 		}
 	}
-	
-	// check whether the board is full
-	public boolean isFull() {
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board[i].length; j++) {
-				if (board[i][j] == 0) {
-					return false;
-				}
-			}
-		}
-		
-		return true;
-	}
-	
-	// check whether this state is terminal
-	public boolean isTerminal() {
-		if (isFull()) {
-			return true;
-		} else if (getRowSum(0) == 3 || getRowSum(1) == 3 || getRowSum(2) == 3 || getColSum(0) == 3 || getColSum(1) == 3 || getColSum(2) == 3 ||
+
+	// check whether there's a winner at current state
+	public boolean findWinner() {
+		if (getRowSum(0) == 3 || getRowSum(1) == 3 || getRowSum(2) == 3 || getColSum(0) == 3 || getColSum(1) == 3 || getColSum(2) == 3 ||
 					board[0][0] + board[1][1] + board[2][2] == 3 || board[0][2] + board[1][1] + board[2][0] == 3 ||
 					getRowSum(0) == -3 || getRowSum(1) == -3 || getRowSum(2) == -3 || getColSum(0) == -3 || getColSum(1) == -3 || getColSum(2) == -3 ||
 					board[0][0] + board[1][1] + board[2][2] == -3 || board[0][2] + board[1][1] + board[2][0] == -3) {
@@ -113,6 +98,15 @@ public class Board {
 		} else {
 			return false;
 		}
+
+	// check whether it is a tie
+	public boolean isTie() {
+		return isFull() & !findWinner();
+	}
+	
+	// check whether this state is terminal
+	public boolean isTerminal() {
+		return isFull() || findWinner();
 	}
 	
 	// compute evaluation value
@@ -214,6 +208,17 @@ public class Board {
 		return board[0][col] + board[1][col] + board[2][col];
 	}
 	
-	
+	// check whether the board is full
+	private boolean isFull() {
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (board[i][j] == 0) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}	
 
 }
