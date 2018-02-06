@@ -101,9 +101,11 @@ public class State {
 		
 		if (turn == 1) {
 			grid[gridRow][gridCol].update(action, turn);
+			lastAction = action;
 			turn = -1;
 		} else if (turn == -1) {
 			grid[gridRow][gridCol].update(action, turn);
+			lastAction = action;
 			turn = 1;
 		} else {
 			try {
