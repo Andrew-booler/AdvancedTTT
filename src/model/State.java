@@ -7,8 +7,6 @@ public class State {
 
 	private Board[][] grid;	// containing 9 Board
 	private int turn;		// +1 for X, -1 for O; set to 1 by default
-	private int alpha;		// the highest value seen so far
-	private int beta;		// the highest value seen so far
 	private int maxDepth;	// limited depth, set by constructor parameter
 	private int xEvaluation;	// the higher the value, the more likely X will win; set to 0 by default
 	private int oEvaluation;	// the higher the value, the more likely O will win; set to 0 by default
@@ -26,9 +24,6 @@ public class State {
 		}
 		// initialize turn
 		turn = 1;
-		// initialize alpha and beta
-		alpha = Integer.MIN_VALUE;
-		beta = Integer.MAX_VALUE;
 		// initialize max depth
 		this.maxDepth = maxDepth;
 		// initialize evaluation value
@@ -51,9 +46,8 @@ public class State {
 		}
 		// copy trun
 		turn = s.getTurn();
-		// copy alpha and beta
-		alpha = s.getAlpha();
-		beta = s.getBeta();
+		// copy max depth
+		maxDepth = s.getMaxDepth();
 		// copy evaluation value
 		xEvaluation = s.getxEvaluation();
 		oEvaluation = s.getoEvaluation();
@@ -64,21 +58,35 @@ public class State {
 	
 	// check whether an action is valid
 	public boolean isValidAction(Action action) {
-		int pos = action.getPosition();
-		int row = (pos - 1) / 3;
-		int col = (pos - 1) % 3;
+		int gridPos = action.getGridPos();	// board position in grid
+		int gridRow = (gridPos - 1) / 3;
+		int gridCol = (gridPos - 1) % 3;
 		
-		return board[row][col] == 0 ? true : false;
+		if (lastAction == null) {	// first move
+			return grid[gridRow][gridCol].isValidAction(action);
+		} else {
+			int lastBoardPos = lastAction.getBoardPos();
+			int lastBoardRow = (lastBoardPos - 1) / 3;
+			int lastBoardCol = (lastBoardPos - 1) % 3;
+			
+			if (grid[lastBoardRow][lastBoardCol].isFull()) {	// corresponding board is full
+				return grid[gridRow][gridCol].isValidAction(action);
+			} else {
+				if (gridPos != lastBoardPos) {
+					return false;
+				} else {
+					return grid[gridRow][gridCol].isValidAction(action);
+				}
+			}
+		}
 	}
 	
 	// get all applicable actions under this state
 	public ArrayList<Action> getAvlActions() {
 		ArrayList<Action> actions = new ArrayList<Action>();
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board[i].length; j++) {
-				if (board[i][j] == 0) {	// empty position
-					actions.add(new Action(3 * i + j + 1));
-				}
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++) {
+				actions.addAll(grid[i][j].getAvlActions());
 			}
 		}
 		
@@ -87,15 +95,15 @@ public class State {
 	
 	// update state according to the action
 	public void update (Action action) {
-		int pos = action.getPosition();
-		int row = (pos - 1) / 3;
-		int col = (pos - 1) % 3;
+		int gridPos = action.getGridPos();
+		int gridRow = (gridPos - 1) / 3;
+		int gridCol = (gridPos - 1) % 3;
 		
 		if (turn == 1) {
-			board[row][col] = 1;
+			grid[gridRow][gridCol].update(action, turn);
 			turn = -1;
 		} else if (turn == -1) {
-			board[row][col] = -1;
+			grid[gridRow][gridCol].update(action, turn);
 			turn = 1;
 		} else {
 			try {
@@ -122,17 +130,11 @@ public class State {
 	
 	// compute utility when the state is terminal
 	public void calUtility() {
-		if (getRowSum(0) == 3 || getRowSum(1) == 3 || getRowSum(2) == 3 || getColSum(0) == 3 || getColSum(1) == 3 || getColSum(2) == 3 ||
-				board[0][0] + board[1][1] + board[2][2] == 3 || board[0][2] + board[1][1] + board[2][0] == 3) {
-			xUtility = 1;	// X win
-			oUtility = -1;	// O win
-		} else if (getRowSum(0) == -3 || getRowSum(1) == -3 || getRowSum(2) == -3 || getColSum(0) == -3 || getColSum(1) == -3 || getColSum(2) == -3 ||
-				board[0][0] + board[1][1] + board[2][2] == -3 || board[0][2] + board[1][1] + board[2][0] == -3) {
-			xUtility = -1;
-			oUtility = 1;
-		} else {
-			xUtility = 0;
-			oUtility = 0;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++) {
+				xEvaluation += grid[i][j].getxEvaluation();
+				oEvaluation += grid[i][j].getoEvaluation();
+			}
 		}
 	}
 
@@ -145,20 +147,12 @@ public class State {
 		return turn;
 	}
 
-	public int getAlpha() {
-		return alpha;
+	public int getMaxDepth() {
+		return maxDepth;
 	}
 
-	public void setAlpha(int alpha) {
-		this.alpha = alpha;
-	}
-
-	public int getBeta() {
-		return beta;
-	}
-
-	public void setBeta(int beta) {
-		this.beta = beta;
+	public void setMaxDepth(int maxDepth) {
+		this.maxDepth = maxDepth;
 	}
 
 	public int getxEvaluation() {
