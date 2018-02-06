@@ -69,7 +69,7 @@ public class State {
 			int lastBoardRow = (lastBoardPos - 1) / 3;
 			int lastBoardCol = (lastBoardPos - 1) % 3;
 			
-			if (grid[lastBoardRow][lastBoardCol].isFull()) {	// corresponding board is full
+			if (grid[lastBoardRow][lastBoardCol].isTie()) {	// corresponding board is tie
 				return grid[gridRow][gridCol].isValidAction(action);
 			} else {
 				if (gridPos != lastBoardPos) {
