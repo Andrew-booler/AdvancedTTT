@@ -118,20 +118,22 @@ public class State {
 	
 	// check whether this state is terminal when the action is taken
 	public boolean isTerminal() {
-		if (isFull()) {
-			return true;
-		} else if (getRowSum(0) == 3 || getRowSum(1) == 3 || getRowSum(2) == 3 || getColSum(0) == 3 || getColSum(1) == 3 || getColSum(2) == 3 ||
-					board[0][0] + board[1][1] + board[2][2] == 3 || board[0][2] + board[1][1] + board[2][0] == 3 ||
-					getRowSum(0) == -3 || getRowSum(1) == -3 || getRowSum(2) == -3 || getColSum(0) == -3 || getColSum(1) == -3 || getColSum(2) == -3 ||
-					board[0][0] + board[1][1] + board[2][2] == -3 || board[0][2] + board[1][1] + board[2][0] == -3) {
-			return true;
-		} else {
-			return false;
+		boolean tieFlag = true;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++) {
+				if (grid[i][j].hasWinner()) {
+					return true;
+				} else {
+					tieFlag &= grid[i][j].isTie();
+				}
+			}
 		}
+
+		return tieFlag;
 	}
 	
-	// compute utility when the state is terminal
-	public void calUtility() {
+	// compute evaluation value when the state is terminal
+	public void calEvaluation() {
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[i].length; j++) {
 				xEvaluation += grid[i][j].getxEvaluation();
@@ -164,30 +166,8 @@ public class State {
 	public int getoEvaluation() {
 		return oEvaluation;
 	}
-
-	// private functions
-	private int getRowSum(int row) {
-		return board[row][0] + board[row][1] + board[row][2];
-	}
-	
-	private int getColSum(int col) {
-		return board[0][col] + board[1][col] + board[2][col];
-	}
 	
 	public Action getLastAction() {
 		return lastAction;
-	}
-
-	// check whether the board is full
-	private boolean isFull() {
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board[i].length; j++) {
-				if (board[i][j] == 0) {
-					return false;
-				}
-			}
-		}
-		
-		return true;
 	}
 }
