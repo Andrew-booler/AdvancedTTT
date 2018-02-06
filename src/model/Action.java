@@ -1,34 +1,40 @@
 package model;
 
-import java.util.Arrays;
-
 public class Action {
 
-
-
-	private int[] position;
-
-	/**
-	 * @return position
-	 */
-	public int[] getPosition() {
-		return position;
+	private int gridPos;
+	private int boardPos;
+	
+	Action(){
+		setGridPos(0);	// set to invalid positions by default
+		setBoardPos(0);
 	}
 
-	/**
-	 * @param postion
-	 */
-	public void setPosition(int[] position) {
-		this.position = position;
+	Action(int gridPos, int boardPos) {
+		this.setGridPos(gridPos);
+		this.setBoardPos(boardPos);
+	}
+
+	Action(Action act) {
+		gridPos = act.getGridPos();
+		boardPos = act.getBoardPos();
 	}
 	
-	public Action(Action act){
-		this.setPosition(Arrays.copyOf(act.getPosition(), 2));
+	public int getGridPos() {
+		return gridPos;
+	}
+
+	public void setGridPos(int gridPos) {
+		this.gridPos = gridPos;
+	}
+
+	public int getBoardPos() {
+		return boardPos;
+	}
+
+	public void setBoardPos(int boardPos) {
+		this.boardPos = boardPos;
 	}
 	
-	public Action(int[] position) {
-		this.setPosition(position);
-	}
 	
-	Action(){}
 }

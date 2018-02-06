@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import model.Action;
-import model.State;
+import model.Board;
 
 public class Interaction {
 	public static int selectRole() {
@@ -29,7 +29,7 @@ public class Interaction {
 			return 0;
 		}
 	}
-	public static void displayBoard(State state) {
+	public static void displayBoard(Board state) {
 		System.err.println("The current board status is:");
 		String board_dis = "";
 		int[][] board = state.getBoard();

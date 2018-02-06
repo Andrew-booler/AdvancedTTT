@@ -1,11 +1,11 @@
 package control;
 
 import model.Action;
-import model.State;
+import model.Board;
 import view.Interaction;
 
 public class Game {
-	private State currentState;
+	private Board currentState;
 	private int roleSelection;
 	public static void main(String[] args) {
 		while (true) {
@@ -107,7 +107,7 @@ public class Game {
 		}
 	}
 	public Game() {
-		currentState = new State();
+		currentState = new Board();
 		roleSelection = Interaction.selectRole();
 	}
 	/**
@@ -122,10 +122,10 @@ public class Game {
 	public void setRoleSelection(int roleSelection) {
 		this.roleSelection = roleSelection;
 	}
-	public State getCurrentState() {
+	public Board getCurrentState() {
 		return currentState;
 	}
-	public void setCurrentState(State currentState) {
+	public void setCurrentState(Board currentState) {
 		this.currentState = currentState;
 	}
 
