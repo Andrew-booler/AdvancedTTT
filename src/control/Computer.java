@@ -1,6 +1,6 @@
 package control;
 
-import model.Board;
+import model.State;
 import model.Action;
 
 import java.util.ArrayList;
@@ -8,60 +8,68 @@ import java.util.ArrayList;
 public class Computer {
 	
 	// take the computer's input and its role, and return an action
-	public static Action play(Board currentState, int role) {
+	public static Action play(State currentState, int role) {
 		// copy current state
-		Board state = new Board(currentState);
+		State state = new State(currentState);
 		
-		return minimaxDecision(state, role);
-	} 
+		return alphaBetaSearch(state, role);
+	}
 	
-	public static Action minimaxDecision(Board state, int role) {
-		int utility = Integer.MIN_VALUE;
+	private static Action alphaBetaSearch(State state, int role) {
+		int evaluation = Integer.MIN_VALUE;
 		Action bestAction = null;
 		ArrayList<Action> actions = state.getAvlActions();	// all applicable actions for this state
 		for (Action a : actions) {
-			Board s = new Board(state);
+			State s = new State(state);
 			s.update(a);
-			int curUtility = minValue(s, role);
-			if (curUtility > utility) {
-				utility = curUtility;
+			int curEvaluation = minValue(s, role, Integer.MIN_VALUE, Integer.MAX_VALUE);
+			if (curEvaluation > evaluation) {
+				evaluation = curEvaluation;
 				bestAction = a;
 			}
 		}
 		return bestAction;
 	}
 	
-	public static int maxValue(Board state, int role) {
-		if (state.isTerminal()) {
-			state.calUtility();
-			return role == 1 ? state.getxUtility() : state.getoUtility();	// computer's role is X
+	private static int maxValue(State state, int role, int alpha, int beta) {
+		if (state.isCutoff()) {
+			state.calEvaluation();
+			return role == 1 ? state.getxEvaluation() : state.getoEvaluation();	// computer's role is X
 		} else {
-			int utility = Integer.MIN_VALUE;
+			int evaluation = Integer.MIN_VALUE;
 			ArrayList<Action> actions = state.getAvlActions();
 			for (Action a : actions) {
-				Board s = new Board(state);
+				State s = new State(state);
 				s.update(a);
-				utility = Math.max(utility, minValue(s, role));
+				evaluation = Math.max(evaluation, minValue(s, role, alpha, beta));
+				if (evaluation >= beta) {
+					return evaluation;
+				}
+				alpha = Math.max(alpha, evaluation);
 			}
 			
-			return utility;
+			return evaluation;
 		}
 	}
 	
-	public static int minValue(Board state, int role) {
-		if (state.isTerminal()) {
-			state.calUtility();
-			return role == 1 ? state.getxUtility() : state.getoUtility();	// computer's role is O
+	private static int minValue(State state, int role, int alpha, int beta) {
+		if (state.isCutoff()) {
+			state.calEvaluation();
+			return role == 1 ? state.getxEvaluation() : state.getoEvaluation();	// computer's role is O
 		} else {
-			int utility = Integer.MAX_VALUE;
+			int evaluation = Integer.MAX_VALUE;
 			ArrayList<Action> actions = state.getAvlActions();
 			for (Action a : actions) {
-				Board s = new Board(state);
+				State s = new State(state);
 				s.update(a);
-				utility = Math.min(utility, maxValue(s, role));
+				evaluation = Math.min(evaluation, maxValue(s, role, alpha, beta));
+				if (evaluation <= alpha) {
+					return evaluation;
+				}
+				beta = Math.min(beta, evaluation);
 			}
 			
-			return utility;
+			return evaluation;
 		}
 	}
 

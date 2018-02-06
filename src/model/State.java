@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class State {
 
@@ -102,10 +101,12 @@ public class State {
 		if (turn == 1) {
 			grid[gridRow][gridCol].update(action, turn);
 			lastAction = action;
+			maxDepth--;	// more deeper
 			turn = -1;
 		} else if (turn == -1) {
 			grid[gridRow][gridCol].update(action, turn);
 			lastAction = action;
+			maxDepth--;	// more deeper
 			turn = 1;
 		} else {
 			try {
@@ -121,7 +122,7 @@ public class State {
 		boolean tieFlag = true;
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[i].length; j++) {
-				if (grid[i][j].hasWinner()) {
+				if (grid[i][j].findWinner()) {
 					return true;
 				} else {
 					tieFlag &= grid[i][j].isTie();
@@ -130,6 +131,11 @@ public class State {
 		}
 
 		return tieFlag;
+	}
+	
+	// check whether this state is cutoff
+	public boolean isCutoff() {
+		return isTerminal() || maxDepth == 0;
 	}
 	
 	// compute evaluation value when the state is terminal
@@ -153,10 +159,6 @@ public class State {
 
 	public int getMaxDepth() {
 		return maxDepth;
-	}
-
-	public void setMaxDepth(int maxDepth) {
-		this.maxDepth = maxDepth;
 	}
 
 	public int getxEvaluation() {

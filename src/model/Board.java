@@ -98,6 +98,7 @@ public class Board {
 		} else {
 			return false;
 		}
+	}
 
 	// check whether it is a tie
 	public boolean isTie() {
