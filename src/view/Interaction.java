@@ -89,6 +89,7 @@ public class Interaction {
 	
 	public static void displayMove(Action act) {
 		System.out.print(act.getGridPos());
-		System.out.print(act.getGridPos());
+		System.out.print(" ");
+		System.out.println(act.getBoardPos());
 	}
 }
