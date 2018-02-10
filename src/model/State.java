@@ -12,7 +12,7 @@ public class State {
 	private Action lastAction;	// last action
 	
 	// default constructor
-	public State(int maxDepth) {
+	public State() {
 		grid = new Board[3][3];
 		// initialize board
 		for (int i = 0; i < grid.length; i++) {
@@ -24,7 +24,7 @@ public class State {
 		// initialize turn
 		turn = 1;
 		// initialize max depth
-		this.maxDepth = maxDepth;
+		this.maxDepth = 7;
 		// initialize evaluation value
 		xEvaluation = 0;
 		oEvaluation = 0;
@@ -117,6 +117,22 @@ public class State {
 		}
 	}
 	
+	// check whether this state is terminal when the action is taken
+		public boolean isTerminal() {
+			boolean tieFlag = true;
+			for (int i = 0; i < grid.length; i++) {
+				for (int j = 0; j < grid[i].length; j++) {
+					if (grid[i][j].findWinner()) {
+						return true;
+					} else {
+						tieFlag &= grid[i][j].isTie();
+					}
+				}
+			}
+
+			return tieFlag;
+		}
+	
 	// check whether this state is cutoff
 	public boolean isCutoff() {
 		return isTerminal() || maxDepth == 0;
@@ -155,21 +171,5 @@ public class State {
 	
 	public Action getLastAction() {
 		return lastAction;
-	}
-	
-	// check whether this state is terminal when the action is taken
-	private boolean isTerminal() {
-		boolean tieFlag = true;
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid[i].length; j++) {
-				if (grid[i][j].findWinner()) {
-					return true;
-				} else {
-					tieFlag &= grid[i][j].isTie();
-				}
-			}
-		}
-
-		return tieFlag;
 	}
 }
