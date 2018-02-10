@@ -2,20 +2,20 @@ package model;
 
 public class Action {
 
-	private int gridPos;
-	private int boardPos;
+	private int gridPos;//which grid will the action take
+	private int boardPos;//which position in the grid will the action take
 	
-	Action(){
+	public Action(){
 		setGridPos(0);	// set to invalid positions by default
 		setBoardPos(0);
 	}
 
-	Action(int gridPos, int boardPos) {
+	public Action(int gridPos, int boardPos) {
 		this.setGridPos(gridPos);
 		this.setBoardPos(boardPos);
 	}
 
-	Action(Action act) {
+	public Action(Action act) {
 		gridPos = act.getGridPos();
 		boardPos = act.getBoardPos();
 	}

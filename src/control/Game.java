@@ -2,10 +2,11 @@ package control;
 
 import model.Action;
 import model.Board;
+import model.State;
 import view.Interaction;
 
 public class Game {
-	private Board currentState;
+	private State currentState;
 	private int roleSelection;
 	public static void main(String[] args) {
 		while (true) {
@@ -28,14 +29,14 @@ public class Game {
 					game.getCurrentState().update(act);
 					//Check if the game is over
 					if (game.getCurrentState().isTerminal()) {
-						game.getCurrentState().calUtility();
-						if(game.getCurrentState().getxUtility()==1) {
+						game.getCurrentState().calEvaluation();
+						if(game.getCurrentState().getxEvaluation()==1) {
 						Interaction.displayBoard(game.getCurrentState());
 						Interaction.displayMsg("You win!");
 						break;
 						}else {
-							game.getCurrentState().calUtility();
-							if(game.getCurrentState().getxUtility()==0) {
+							game.getCurrentState().calEvaluation();
+							if(game.getCurrentState().getxEvaluation()==0) {
 								Interaction.displayBoard(game.getCurrentState());
 								Interaction.displayMsg("Tie.");
 								break;
@@ -52,8 +53,8 @@ public class Game {
 					Interaction.displayMove(act);
 					game.getCurrentState().update(act);
 					if (game.getCurrentState().isTerminal()) {
-						game.getCurrentState().calUtility();
-						if(game.getCurrentState().getxUtility()==-1) {
+						game.getCurrentState().calEvaluation();
+						if(game.getCurrentState().getxEvaluation()==-1) {
 							Interaction.displayBoard(game.getCurrentState());
 							Interaction.displayMsg("You lose!");
 							break;
@@ -72,13 +73,13 @@ public class Game {
 					Interaction.displayMove(act);
 					game.getCurrentState().update(act);
 					if (game.getCurrentState().isTerminal()) {
-						game.getCurrentState().calUtility();
-						if(game.getCurrentState().getoUtility()==-1) {
+						game.getCurrentState().calEvaluation();
+						if(game.getCurrentState().getoEvaluation()==-1) {
 						Interaction.displayBoard(game.getCurrentState());
 						Interaction.displayMsg("You lose!");
 						break;
 						}else {
-							if(game.getCurrentState().getoUtility()==0) {
+							if(game.getCurrentState().getoEvaluation()==0) {
 								Interaction.displayBoard(game.getCurrentState());
 								Interaction.displayMsg("Tie.");
 								break;
@@ -94,8 +95,8 @@ public class Game {
 					Interaction.displayMove(act);
 					game.getCurrentState().update(act);
 					if(game.getCurrentState().isTerminal()) {
-						game.getCurrentState().calUtility();
-						if(game.getCurrentState().getoUtility()==1) {
+						game.getCurrentState().calEvaluation();
+						if(game.getCurrentState().getoEvaluation()==1) {
 							Interaction.displayBoard(game.getCurrentState());
 							Interaction.displayMsg("You win!");
 							break;
@@ -107,7 +108,7 @@ public class Game {
 		}
 	}
 	public Game() {
-		currentState = new Board();
+		currentState = new State();
 		roleSelection = Interaction.selectRole();
 	}
 	/**
@@ -122,10 +123,10 @@ public class Game {
 	public void setRoleSelection(int roleSelection) {
 		this.roleSelection = roleSelection;
 	}
-	public Board getCurrentState() {
+	public State getCurrentState() {
 		return currentState;
 	}
-	public void setCurrentState(Board currentState) {
+	public void setCurrentState(State currentState) {
 		this.currentState = currentState;
 	}
 

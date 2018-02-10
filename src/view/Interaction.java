@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 
 import model.Action;
 import model.Board;
+import model.State;
 
 public class Interaction {
 	public static int selectRole() {
@@ -29,26 +30,35 @@ public class Interaction {
 			return 0;
 		}
 	}
-	public static void displayBoard(Board state) {
+	public static void displayBoard(State state) {
 		System.err.println("The current board status is:");
-		String board_dis = "";
-		int[][] board = state.getBoard();
-		//The default of board size is 3*3
-		for(int i=0;i<3;i++) {
-			board_dis+="-------\n";
-			for (int j=0;j<3;j++) {
+		String board_dis = "-----------------------\n";
+		Board[][] grids = state.getGrid();
+		//The default of board size is 9*9
+		for(int i=0;i<3;i++) {//iterate over each row of grids
+			board_dis+="|---------------------|\n";
+			for (int j=0;j<3;j++) {//iterate over each row in the grids
 				board_dis+="|";
-				if(board[i][j]==1) {
-					board_dis+="X";
-				}else if(board[i][j]==-1){
-					board_dis+="O";
-				}else {
-					board_dis+=" ";
+				for (int k=0;k<3;k++) {//iterate over each grids in a row
+					int[][] grid = grids[i][k].getBoard();
+					for (int l=0;l<3;l++) {//iterate over each column in the grids
+						board_dis+="|";
+						if(grid[j][l]==1) {
+							board_dis+="X";
+						}else if(grid[j][l]==-1){
+							board_dis+="O";
+						}else {
+							board_dis+=" ";
+						}
+					}
+					board_dis+="|";
 				}
+				board_dis+="|\n";
 			}
-			board_dis+="|\n";
+
 		}
-		board_dis+="-------\n";
+		
+		board_dis+="|---------------------|\n-----------------------\n";
 		System.err.println(board_dis);
 
 	}
@@ -57,7 +67,9 @@ public class Interaction {
 		System.err.println("Please select your next move:");
 		BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 		try {
-			return new Action(Integer.parseInt(stdIn.readLine()));
+			String input = stdIn.readLine();
+			String[] figures=input.split(" ");
+			return new Action(Integer.parseInt(figures[0]),Integer.parseInt(figures[1]));
 			
 		} catch (NumberFormatException e) {
 
@@ -76,6 +88,7 @@ public class Interaction {
 	}
 	
 	public static void displayMove(Action act) {
-		System.out.println(act.getPosition());
+		System.out.print(act.getGridPos());
+		System.out.print(act.getGridPos());
 	}
 }
