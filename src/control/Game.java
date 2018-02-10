@@ -1,7 +1,6 @@
 package control;
 
 import model.Action;
-import model.Board;
 import model.State;
 import view.Interaction;
 
