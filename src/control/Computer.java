@@ -11,23 +11,25 @@ public class Computer {
 	public static Action play(State currentState, int role) {
 		// copy current state
 		State state = new State(currentState);
+		state.setMaxDepth(8);
 		
 		return alphaBetaSearch(state, role);
 	}
 	
 	private static Action alphaBetaSearch(State state, int role) {
-		int evaluation = Integer.MIN_VALUE;
+		int evaluation = maxValue(state, role, Integer.MIN_VALUE, Integer.MAX_VALUE);
 		Action bestAction = null;
-		ArrayList<Action> actions = state.getAvlActions();	// all applicable actions for this state
+		ArrayList<Action> actions = state.getAvlActions();
 		for (Action a : actions) {
 			State s = new State(state);
 			s.update(a);
-			int curEvaluation = minValue(s, role, Integer.MIN_VALUE, Integer.MAX_VALUE);
-			if (curEvaluation > evaluation) {
-				evaluation = curEvaluation;
+			s.calEvaluation();
+			int curEvaluation = (role == 1 ? state.getxEvaluation() : state.getoEvaluation());	// computer's role is X
+			if (curEvaluation == evaluation) {
 				bestAction = a;
 			}
 		}
+		
 		return bestAction;
 	}
 	
