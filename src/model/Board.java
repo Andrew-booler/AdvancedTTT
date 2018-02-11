@@ -119,13 +119,17 @@ public class Board {
 		for (int i = 0; i < 3; i++) {
 			switch(getRowSum(i)) {
 				case 3:
-					xTmp += 100;
+					xTmp += 100;	
+					break;
 				case 2:
-					xTmp += 1;
+					xTmp += 1;	
+					break;
 				case -3:
-					xTmp -= -100;
+					xTmp -= -100;	
+					break;
 				case -2:
 					xTmp -= -1;
+					break;
 				default:
 					break;
 			}
@@ -136,12 +140,16 @@ public class Board {
 			switch(getColSum(i)) {
 				case 3:
 					xTmp += 100;
+					break;
 				case 2:
 					xTmp += 1;
+					break;
 				case -3:
 					xTmp -= 100;
+					break;
 				case -2:
 					xTmp -= 1;
+					break;
 				default:
 					break;
 			}
@@ -151,12 +159,16 @@ public class Board {
 		switch(board[0][0] + board[1][1] + board[2][2]) {
 			case 3:
 				xTmp += 100;
+				break;
 			case 2:
 				xTmp += 1;
+				break;
 			case -3:
 				xTmp -= 100;
+				break;
 			case -2:
 				xTmp -= 1;
+				break;
 			default:
 				break;
 		}
@@ -165,26 +177,21 @@ public class Board {
 		switch(board[0][2] + board[1][1] + board[2][0]) {
 			case 3:
 				xTmp += 100;
+				break;
 			case 2:
 				xTmp += 1;
+				break;
 			case -3:
 				xTmp -= 100;
+				break;
 			case -2:
 				xTmp -= 1;
+				break;
 			default:
 				break;
 		}
 		
-		xEvaluation = xTmp - oTmp;
-		oEvaluation = oTmp - xTmp;
-		
-		if (getxCnt() > getoCnt()) {
-			xTmp += 50;
-		} else if (getxCnt() == getoCnt()) {
-			xTmp += 1;
-		} else {
-			xTmp -= 50;
-		}
+		xTmp += (getxCnt() - getoCnt()) * 5;
 		
 		xEvaluation = xTmp - oTmp;
 		oEvaluation = oTmp - xTmp;

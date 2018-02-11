@@ -24,7 +24,7 @@ public class State {
 		// initialize turn
 		turn = 1;
 		// initialize max depth
-		this.maxDepth = 8;
+		this.maxDepth = 10;
 		// initialize evaluation value
 		xEvaluation = 0;
 		oEvaluation = 0;
@@ -156,8 +156,11 @@ public class State {
 	
 	// compute evaluation value when the state is terminal
 	public void calEvaluation() {
+		xEvaluation = 0;
+		oEvaluation = 0;
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[i].length; j++) {
+				grid[i][j].calEvaluation();
 				xEvaluation += grid[i][j].getxEvaluation();
 				oEvaluation += grid[i][j].getoEvaluation();
 			}
