@@ -4,7 +4,7 @@ import model.Action;
 import model.State;
 import view.Interaction;
 
-public class Game {
+public class Game {//This is for more advanced
 	private State currentState;
 	private int roleSelection;
 	public static void main(String[] args) {
