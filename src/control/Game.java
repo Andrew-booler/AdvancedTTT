@@ -29,7 +29,7 @@ public class Game {
 					//Check if the game is over
 					if (game.getCurrentState().isTerminal()) {
 						game.getCurrentState().calEvaluation();
-						if(game.getCurrentState().getxEvaluation()==1) {
+						if(game.getCurrentState().getxEvaluation()>game.getCurrentState().getoEvaluation()) {
 						Interaction.displayBoard(game.getCurrentState());
 						Interaction.displayMsg("You win!");
 						break;
@@ -53,7 +53,7 @@ public class Game {
 					game.getCurrentState().update(act);
 					if (game.getCurrentState().isTerminal()) {
 						game.getCurrentState().calEvaluation();
-						if(game.getCurrentState().getxEvaluation()==-1) {
+						if(game.getCurrentState().getxEvaluation()<game.getCurrentState().getoEvaluation()) {
 							Interaction.displayBoard(game.getCurrentState());
 							Interaction.displayMsg("You lose!");
 							break;
@@ -73,7 +73,7 @@ public class Game {
 					game.getCurrentState().update(act);
 					if (game.getCurrentState().isTerminal()) {
 						game.getCurrentState().calEvaluation();
-						if(game.getCurrentState().getoEvaluation()==-1) {
+						if(game.getCurrentState().getoEvaluation()<game.getCurrentState().getxEvaluation()) {
 						Interaction.displayBoard(game.getCurrentState());
 						Interaction.displayMsg("You lose!");
 						break;
@@ -95,7 +95,7 @@ public class Game {
 					game.getCurrentState().update(act);
 					if(game.getCurrentState().isTerminal()) {
 						game.getCurrentState().calEvaluation();
-						if(game.getCurrentState().getoEvaluation()==1) {
+						if(game.getCurrentState().getoEvaluation()>game.getCurrentState().getxEvaluation()) {
 							Interaction.displayBoard(game.getCurrentState());
 							Interaction.displayMsg("You win!");
 							break;
