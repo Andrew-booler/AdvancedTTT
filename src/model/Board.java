@@ -123,9 +123,9 @@ public class Board {
 				case 2:
 					xTmp += 1;
 				case -3:
-					oTmp += 100;
+					xTmp -= -100;
 				case -2:
-					oTmp += 1;
+					xTmp -= -1;
 				default:
 					break;
 			}
@@ -139,9 +139,9 @@ public class Board {
 				case 2:
 					xTmp += 1;
 				case -3:
-					oTmp += 100;
+					xTmp -= 100;
 				case -2:
-					oTmp += 1;
+					xTmp -= 1;
 				default:
 					break;
 			}
@@ -154,9 +154,9 @@ public class Board {
 			case 2:
 				xTmp += 1;
 			case -3:
-				oTmp += 100;
+				xTmp -= 100;
 			case -2:
-				oTmp += 1;
+				xTmp -= 1;
 			default:
 				break;
 		}
@@ -168,11 +168,22 @@ public class Board {
 			case 2:
 				xTmp += 1;
 			case -3:
-				oTmp += 100;
+				xTmp -= 100;
 			case -2:
-				oTmp += 1;
+				xTmp -= 1;
 			default:
 				break;
+		}
+		
+		xEvaluation = xTmp - oTmp;
+		oEvaluation = oTmp - xTmp;
+		
+		if (getxCnt() > getoCnt()) {
+			xTmp += 50;
+		} else if (getxCnt() == getoCnt()) {
+			xTmp += 1;
+		} else {
+			xTmp -= 50;
 		}
 		
 		xEvaluation = xTmp - oTmp;
@@ -221,5 +232,31 @@ public class Board {
 		
 		return true;
 	}	
+	
+	private int getxCnt() {
+		int cnt = 0;
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (board[i][j] == 1) {
+					cnt++;
+				}
+			}
+		}
+		
+		return cnt;
+	}
+	
+	private int getoCnt() {
+		int cnt = 0;
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (board[i][j] == -1) {
+					cnt++;
+				}
+			}
+		}
+		
+		return cnt;
+	}
 
 }

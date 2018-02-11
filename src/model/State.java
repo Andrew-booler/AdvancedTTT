@@ -24,7 +24,7 @@ public class State {
 		// initialize turn
 		turn = 1;
 		// initialize max depth
-		this.maxDepth = 7;
+		this.maxDepth = 8;
 		// initialize evaluation value
 		xEvaluation = 0;
 		oEvaluation = 0;
@@ -51,7 +51,7 @@ public class State {
 		xEvaluation = s.getxEvaluation();
 		oEvaluation = s.getoEvaluation();
 		// copy last action
-		lastAction = new Action(s.getLastAction());
+		lastAction = (s.getLastAction() == null ? null : new Action(s.getLastAction()));
 
 	}
 	
@@ -83,12 +83,28 @@ public class State {
 	// get all applicable actions under this state
 	public ArrayList<Action> getAvlActions() {
 		ArrayList<Action> actions = new ArrayList<Action>();
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid[i].length; j++) {
-				actions.addAll(grid[i][j].getAvlActions());
+		if (lastAction == null) {
+			for (int i = 0; i < grid.length; i++) {
+				for (int j = 0; j < grid[i].length; j++) {
+					actions.addAll(grid[i][j].getAvlActions());
+				}
+			}
+		} else {
+			int lastBoardPos = lastAction.getBoardPos();
+			int lastBoardRow = (lastBoardPos - 1) / 3;
+			int lastBoardCol = (lastBoardPos - 1) % 3;
+			
+			if (grid[lastBoardRow][lastBoardCol].isTie()) {
+				for (int i = 0; i < grid.length; i++) {
+					for (int j = 0; j < grid[i].length; j++) {
+						actions.addAll(grid[i][j].getAvlActions());
+					}
+				}
+			} else {
+				actions.addAll(grid[lastBoardRow][lastBoardCol].getAvlActions());
 			}
 		}
-		
+
 		return actions;
 	}
 	
@@ -118,20 +134,20 @@ public class State {
 	}
 	
 	// check whether this state is terminal when the action is taken
-		public boolean isTerminal() {
-			boolean tieFlag = true;
-			for (int i = 0; i < grid.length; i++) {
-				for (int j = 0; j < grid[i].length; j++) {
-					if (grid[i][j].findWinner()) {
-						return true;
-					} else {
-						tieFlag &= grid[i][j].isTie();
-					}
+	public boolean isTerminal() {
+		boolean tieFlag = true;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++) {
+				if (grid[i][j].findWinner()) {
+					return true;
+				} else {
+					tieFlag &= grid[i][j].isTie();
 				}
 			}
-
-			return tieFlag;
 		}
+
+		return tieFlag;
+	}
 	
 	// check whether this state is cutoff
 	public boolean isCutoff() {
@@ -159,6 +175,10 @@ public class State {
 
 	public int getMaxDepth() {
 		return maxDepth;
+	}
+	
+	public void setMaxDepth(int maxDepth) {
+		this.maxDepth = maxDepth;
 	}
 
 	public int getxEvaluation() {
