@@ -58,7 +58,9 @@ public class Interaction {
 
 		}
 		
-		board_dis+="|---------------------|\n-----------------------\n";
+		board_dis+="|---------------------|\n-----------------------";
+		state.calEvaluation();
+		board_dis+="\nx_eva= "+state.getxEvaluation()+"; o_eva= "+state.getoEvaluation();
 		System.err.println(board_dis);
 
 	}
