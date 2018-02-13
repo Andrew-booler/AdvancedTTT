@@ -132,7 +132,23 @@ public class State {
 			}
 		}
 	}
+
+	// check whether this state is tie
+	public boolean isTie() {
+		boolean tieFlag = true;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++) {
+				if (grid[i][j].findWinner()) {
+					return false;
+				} else {
+					tieFlag &= grid[i][j].isTie();
+				}
+			}
+		}
 	
+		return tieFlag;
+	}
+		
 	// check whether this state is terminal when the action is taken
 	public boolean isTerminal() {
 		boolean tieFlag = true;
@@ -156,6 +172,8 @@ public class State {
 	
 	// compute evaluation value when the state is terminal
 	public void calEvaluation() {
+		int grade[][] = new int[3][3];	// record the state of small board
+
 		xEvaluation = 0;
 		oEvaluation = 0;
 		for (int i = 0; i < grid.length; i++) {
@@ -163,8 +181,101 @@ public class State {
 				grid[i][j].calEvaluation();
 				xEvaluation += grid[i][j].getxEvaluation();
 				oEvaluation += grid[i][j].getoEvaluation();
+				if (grid[i][j].isTerminal && grid[i][j].findWinner()) {	// a small board has a winner
+					if (grid[i][j].getxEvaluation() > grid[i][j].getoEvaluaton()) {
+						grade[i][j] = 1;	// X win
+					} else if (grid[i][j].getxEvaluation() < grid[i][j],getoEvaluation()) {
+						grade[i][j] = -1;	// Y win
+					} else {
+						grade[i][j] = 0;	// not finished
+					}
+				} else {	// a small board is tie or has not been terminated
+					grade[i][j] = 0;
+				}
 			}
 		}
+
+		int xTmp = 0;
+		int oTmp = 0;
+
+		// compute row value
+		for (int i = 0; i < 3; i++) {
+			switch(getRowSum(grade, i)) {
+				case 3:
+					xTmp += 100;	
+					break;
+				case 2:
+					xTmp += 10;	
+					break;
+				case -3:
+					xTmp -= 100;	
+					break;
+				case -2:
+					xTmp -= 10;
+					break;
+				default:
+					break;
+			}
+		}
+
+		// compute column value
+		for (int i = 0; i < 3; i++) {
+			switch(getColSum(i)) {
+				case 3:
+					xTmp += 100;
+					break;
+				case 2:
+					xTmp += 10;
+					break;
+				case -3:
+					xTmp -= 100;
+					break;
+				case -2:
+					xTmp -= 10;
+					break;
+				default:
+					break;
+			}
+		}
+		
+	// compute diagonal value
+		switch(board[0][0] + board[1][1] + board[2][2]) {
+			case 3:
+				xTmp += 100;
+				break;
+			case 2:
+				xTmp += 10;
+				break;
+			case -3:
+				xTmp -= 100;
+				break;
+			case -2:
+				xTmp -= 10;
+				break;
+			default:
+				break;
+		}
+
+	// compute inverse diagonal value
+		switch(board[0][2] + board[1][1] + board[2][0]) {
+			case 3:
+				xTmp += 100;
+				break;
+			case 2:
+				xTmp += 10;
+				break;
+			case -3:
+				xTmp -= 100;
+				break;
+			case -2:
+				xTmp -= 10;
+				break;
+			default:
+				break;
+		}
+
+		xEvaluation = xTmp - oTmp;
+		oEvaluation = oTmp - xTmp;
 	}
 
 	// getters
@@ -194,5 +305,14 @@ public class State {
 	
 	public Action getLastAction() {
 		return lastAction;
+	}
+
+	// private functions
+	private int getRowSum(int board[][], int row) {
+		return board[row][0] + board[row][1] + board[row][2];
+	}
+	
+	private int getColSum(int board[][], int col) {
+		return board[0][col] + board[1][col] + board[2][col];
 	}
 }
