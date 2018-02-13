@@ -68,8 +68,8 @@ public class State {
 			int lastBoardRow = (lastBoardPos - 1) / 3;
 			int lastBoardCol = (lastBoardPos - 1) % 3;
 			
-			if (grid[lastBoardRow][lastBoardCol].isTie()) {	// corresponding board is tie
-				return grid[gridRow][gridCol].isValidAction(action);
+			if (grid[lastBoardRow][lastBoardCol].isTie() || grid[lastBoardRow][lastBoardCol].findWinner()) {	// corresponding board is tie or has a winner
+				return !grid[gridRow][gridCol].isTie() && !grid[gridRow][gridCol].findWinner() && grid[gridRow][gridCol].isValidAction(action);
 			} else {
 				if (gridPos != lastBoardPos) {
 					return false;
@@ -94,13 +94,15 @@ public class State {
 			int lastBoardRow = (lastBoardPos - 1) / 3;
 			int lastBoardCol = (lastBoardPos - 1) % 3;
 			
-			if (grid[lastBoardRow][lastBoardCol].isTie()) {
+			if (grid[lastBoardRow][lastBoardCol].isTerminal()) {	// terminal
 				for (int i = 0; i < grid.length; i++) {
 					for (int j = 0; j < grid[i].length; j++) {
-						actions.addAll(grid[i][j].getAvlActions());
+						if (!grid[i][j].isTerminal()) {
+							actions.addAll(grid[i][j].getAvlActions());
+						}
 					}
 				}
-			} else {
+			} else {	// not tie and not has a winner
 				actions.addAll(grid[lastBoardRow][lastBoardCol].getAvlActions());
 			}
 		}
@@ -133,36 +135,76 @@ public class State {
 		}
 	}
 
-	// check whether this state is tie
+	// check whether this state is tie, called after isTerminal()
 	public boolean isTie() {
-		boolean tieFlag = true;
+		int grade[][] = new int[3][3];	// record the state of small board
+		
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[i].length; j++) {
-				if (grid[i][j].findWinner()) {
-					return false;
-				} else {
-					tieFlag &= grid[i][j].isTie();
+				grid[i][j].calEvaluation();
+				if (grid[i][j].isTerminal()) {	// a small board terminates
+					if (grid[i][j].findWinner()) {	// there is a winner in a small board
+						if (grid[i][j].getxEvaluation() > grid[i][j].getoEvaluation()) {	// X win
+							grade[i][j] = 1;	
+						} else {	// Y win
+							grade[i][j] = -1;	
+						}
+					} else {
+						grade[i][j] = 0;	// tie
+					}
+				} else {	// a small board not terminates
+					grade[i][j] = 0;
 				}
 			}
 		}
-	
-		return tieFlag;
+		
+		if (getRowSum(grade, 0) == 3 || getRowSum(grade, 1) == 3 || getRowSum(grade, 2) == 3 || getColSum(grade, 0) == 3 || getColSum(grade, 1) == 3 || getColSum(grade, 2) == 3 ||
+			grade[0][0] + grade[1][1] + grade[2][2] == 3 || grade[0][2] + grade[1][1] + grade[2][0] == 3 ||
+			getRowSum(grade, 0) == -3 || getRowSum(grade, 1) == -3 || getRowSum(grade, 2) == -3 || getColSum(grade, 0) == -3 || getColSum(grade, 1) == -3 || getColSum(grade, 2) == -3 ||
+			grade[0][0] + grade[1][1] + grade[2][2] == -3 || grade[0][2] + grade[1][1] + grade[2][0] == -3) {
+			return false;	// find a winner, not a tie
+		} else {
+			return true;	// tie, when terminal
+		}
 	}
 		
 	// check whether this state is terminal when the action is taken
 	public boolean isTerminal() {
-		boolean tieFlag = true;
+		int grade[][] = new int[3][3];	// record the state of small board
+		
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[i].length; j++) {
-				if (grid[i][j].findWinner()) {
-					return true;
-				} else {
-					tieFlag &= grid[i][j].isTie();
+				grid[i][j].calEvaluation();
+				if (grid[i][j].isTerminal()) {	// a small board terminates
+					if (grid[i][j].findWinner()) {	// there is a winner in a small board
+						if (grid[i][j].getxEvaluation() > grid[i][j].getoEvaluation()) {	// X win
+							grade[i][j] = 1;	
+						} else {	// Y win
+							grade[i][j] = -1;	
+						}
+					} else {
+						grade[i][j] = 0;	// tie
+					}
+				} else {	// a small board not terminates
+					grade[i][j] = 0;
 				}
 			}
 		}
-
-		return tieFlag;
+		
+		if (getRowSum(grade, 0) == 3 || getRowSum(grade, 1) == 3 || getRowSum(grade, 2) == 3 || getColSum(grade, 0) == 3 || getColSum(grade, 1) == 3 || getColSum(grade, 2) == 3 ||
+			grade[0][0] + grade[1][1] + grade[2][2] == 3 || grade[0][2] + grade[1][1] + grade[2][0] == 3 ||
+			getRowSum(grade, 0) == -3 || getRowSum(grade, 1) == -3 || getRowSum(grade, 2) == -3 || getColSum(grade, 0) == -3 || getColSum(grade, 1) == -3 || getColSum(grade, 2) == -3 ||
+			grade[0][0] + grade[1][1] + grade[2][2] == -3 || grade[0][2] + grade[1][1] + grade[2][0] == -3) {
+			return true;	// find a winner
+		} else {
+			boolean fullFlag = true;
+			for (int i = 0; i < grid.length; i++) {
+				for (int j = 0; j < grid[i].length; j++) {
+					fullFlag &= (grid[i][j].findWinner() || grid[i][j].isTie());
+				}
+			}
+			return fullFlag;	// tie
+		}
 	}
 	
 	// check whether this state is cutoff
@@ -181,15 +223,17 @@ public class State {
 				grid[i][j].calEvaluation();
 				xEvaluation += grid[i][j].getxEvaluation();
 				oEvaluation += grid[i][j].getoEvaluation();
-				if (grid[i][j].isTerminal && grid[i][j].findWinner()) {	// a small board has a winner
-					if (grid[i][j].getxEvaluation() > grid[i][j].getoEvaluaton()) {
-						grade[i][j] = 1;	// X win
-					} else if (grid[i][j].getxEvaluation() < grid[i][j],getoEvaluation()) {
-						grade[i][j] = -1;	// Y win
+				if (grid[i][j].isTerminal()) {	// a small board terminates
+					if (grid[i][j].findWinner()) {	// there is a winner in a small board
+						if (grid[i][j].getxEvaluation() > grid[i][j].getoEvaluation()) {	// X win
+							grade[i][j] = 1;	
+						} else {	// Y win
+							grade[i][j] = -1;	
+						}
 					} else {
-						grade[i][j] = 0;	// not finished
+						grade[i][j] = 0; 	// tie
 					}
-				} else {	// a small board is tie or has not been terminated
+				} else {	// a small board not terminates
 					grade[i][j] = 0;
 				}
 			}
@@ -220,7 +264,7 @@ public class State {
 
 		// compute column value
 		for (int i = 0; i < 3; i++) {
-			switch(getColSum(i)) {
+			switch(getColSum(grade, i)) {
 				case 3:
 					xTmp += 100;
 					break;
@@ -239,7 +283,7 @@ public class State {
 		}
 		
 	// compute diagonal value
-		switch(board[0][0] + board[1][1] + board[2][2]) {
+		switch(grade[0][0] + grade[1][1] + grade[2][2]) {
 			case 3:
 				xTmp += 100;
 				break;
@@ -257,7 +301,7 @@ public class State {
 		}
 
 	// compute inverse diagonal value
-		switch(board[0][2] + board[1][1] + board[2][0]) {
+		switch(grade[0][2] + grade[1][1] + grade[2][0]) {
 			case 3:
 				xTmp += 100;
 				break;
