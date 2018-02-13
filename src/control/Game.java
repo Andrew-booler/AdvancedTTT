@@ -29,17 +29,15 @@ public class Game {
 					//Check if the game is over
 					if (game.getCurrentState().isTerminal()) {
 						game.getCurrentState().calEvaluation();
-						if(game.getCurrentState().getxEvaluation()>game.getCurrentState().getoEvaluation()) {
+						if(!game.getCurrentState().isTie()) {
 						Interaction.displayBoard(game.getCurrentState());
 						Interaction.displayMsg("You win!");
 						break;
 						}else {
-							game.getCurrentState().calEvaluation();
-							if(game.getCurrentState().isTie()) {
 								Interaction.displayBoard(game.getCurrentState());
 								Interaction.displayMsg("Tie.");
 								break;
-							}
+							
 						}
 					}
 					//Same steps for computer player
@@ -52,12 +50,10 @@ public class Game {
 					Interaction.displayMove(act);
 					game.getCurrentState().update(act);
 					if (game.getCurrentState().isTerminal()) {
-						game.getCurrentState().calEvaluation();
-						if(game.getCurrentState().getxEvaluation()<game.getCurrentState().getoEvaluation()) {
-							Interaction.displayBoard(game.getCurrentState());
-							Interaction.displayMsg("You lose!");
-							break;
-							}
+						Interaction.displayBoard(game.getCurrentState());
+						Interaction.displayMsg("You lose!");
+						break;
+							
 					}
 				}
 			}else {
@@ -73,16 +69,14 @@ public class Game {
 					game.getCurrentState().update(act);
 					if (game.getCurrentState().isTerminal()) {
 						game.getCurrentState().calEvaluation();
-						if(game.getCurrentState().getoEvaluation()<game.getCurrentState().getxEvaluation()) {
+						if(!game.getCurrentState().isTie()) {
 						Interaction.displayBoard(game.getCurrentState());
 						Interaction.displayMsg("You lose!");
 						break;
 						}else {
-							if(game.getCurrentState().getoEvaluation()==0) {
-								Interaction.displayBoard(game.getCurrentState());
-								Interaction.displayMsg("Tie.");
-								break;
-							}
+							Interaction.displayBoard(game.getCurrentState());
+							Interaction.displayMsg("Tie.");
+							break;
 						}
 					}
 					Interaction.displayBoard(game.getCurrentState());
@@ -94,12 +88,9 @@ public class Game {
 					Interaction.displayMove(act);
 					game.getCurrentState().update(act);
 					if(game.getCurrentState().isTerminal()) {
-						game.getCurrentState().calEvaluation();
-						if(game.getCurrentState().getoEvaluation()>game.getCurrentState().getxEvaluation()) {
-							Interaction.displayBoard(game.getCurrentState());
-							Interaction.displayMsg("You win!");
-							break;
-							}
+						Interaction.displayBoard(game.getCurrentState());
+						Interaction.displayMsg("You win!");
+						break;
 					}
 					
 				}
