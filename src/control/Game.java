@@ -35,7 +35,7 @@ public class Game {
 						break;
 						}else {
 							game.getCurrentState().calEvaluation();
-							if(game.getCurrentState().getxEvaluation()==0) {
+							if(game.getCurrentState().isTie()) {
 								Interaction.displayBoard(game.getCurrentState());
 								Interaction.displayMsg("Tie.");
 								break;
