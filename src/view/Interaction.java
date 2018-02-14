@@ -71,16 +71,19 @@ public class Interaction {
 		try {
 			String input = stdIn.readLine();
 			String[] figures=input.split(" ");
-			return new Action(Integer.parseInt(figures[0]),Integer.parseInt(figures[1]));
+			if(figures.length>=2) {
+				return new Action(Integer.parseInt(figures[0]),Integer.parseInt(figures[1]));
+				
+			}else {
+				return new Action(0,0);
+			}
+			
 			
 		} catch (NumberFormatException e) {
-
-			e.printStackTrace();
-			return null;
+			return new Action(0,0);
 		} catch (IOException e) {
 
-			e.printStackTrace();
-			return null;
+			return new Action(0,0);
 		}
 		
 	}

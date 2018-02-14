@@ -36,5 +36,12 @@ public class Action {
 		this.boardPos = boardPos;
 	}
 	
-	
+	public boolean validate() {
+		if(gridPos>0 && gridPos<10) {
+			if (boardPos>0 && boardPos<10) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -19,7 +19,13 @@ public class Game {
 					Interaction.displayBoard(game.getCurrentState());
 					Action act = Interaction.play();
 					//Validate the move
-					while (!game.getCurrentState().isValidAction(act)) {
+					while (true) {
+						if(act.validate()) {
+							if(game.getCurrentState().isValidAction(act)) {
+								break;
+							}
+						}
+						
 						Interaction.displayMsg("The Action is invalid");
 						act= Interaction.play();
 					}
@@ -43,9 +49,16 @@ public class Game {
 					//Same steps for computer player
 					Interaction.displayBoard(game.getCurrentState());
 					act = Computer.play(game.getCurrentState(),-game.getRoleSelection());
-					while (!game.getCurrentState().isValidAction(act)) {
+					//Validate the move
+					while (true) {
+						if(act.validate()) {
+							if(game.getCurrentState().isValidAction(act)) {
+								break;
+							}
+						}
+						
 						Interaction.displayMsg("The Action is invalid");
-						act= Computer.play(game.getCurrentState(),-game.getRoleSelection());
+						act= Interaction.play();
 					}
 					Interaction.displayMove(act);
 					game.getCurrentState().update(act);
@@ -61,9 +74,16 @@ public class Game {
 				while(true) {
 					Interaction.displayBoard(game.getCurrentState());
 					Action act = Computer.play(game.getCurrentState(),-game.getRoleSelection());
-					while (!game.getCurrentState().isValidAction(act)) {
+					//Validate the move
+					while (true) {
+						if(act.validate()) {
+							if(game.getCurrentState().isValidAction(act)) {
+								break;
+							}
+						}
+						
 						Interaction.displayMsg("The Action is invalid");
-						act= Computer.play(game.getCurrentState(),-game.getRoleSelection());
+						act= Interaction.play();
 					}
 					Interaction.displayMove(act);
 					game.getCurrentState().update(act);
@@ -81,7 +101,14 @@ public class Game {
 					}
 					Interaction.displayBoard(game.getCurrentState());
 					act = Interaction.play();
-					while (!game.getCurrentState().isValidAction(act)) {
+					//Validate the move
+					while (true) {
+						if(act.validate()) {
+							if(game.getCurrentState().isValidAction(act)) {
+								break;
+							}
+						}
+						
 						Interaction.displayMsg("The Action is invalid");
 						act= Interaction.play();
 					}
