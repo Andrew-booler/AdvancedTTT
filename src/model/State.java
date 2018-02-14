@@ -24,7 +24,7 @@ public class State {
 		// initialize turn
 		turn = 1;
 		// initialize max depth
-		this.maxDepth = 10;
+		this.maxDepth = 7;
 		// initialize evaluation value
 		xEvaluation = 0;
 		oEvaluation = 0;

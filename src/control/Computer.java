@@ -11,7 +11,7 @@ public class Computer {
 	public static Action play(State currentState, int role) {
 		// copy current state
 		State state = new State(currentState);
-		state.setMaxDepth(10);
+		state.setMaxDepth(7);
 		
 		return alphaBetaSearch(state, role);
 	}
