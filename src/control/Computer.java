@@ -12,9 +12,7 @@ public class Computer {
 		// copy current state
 		State state = new State(currentState);
 
-		state.setMaxDepth(5);
-
-		state.setMaxDepth(8);
+		state.setMaxDepth(7);
 		
 		return alphaBetaSearch(state, role);
 	}

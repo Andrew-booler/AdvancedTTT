@@ -24,7 +24,7 @@ public class State {
 		// initialize turn
 		turn = 1;
 		// initialize max depth
-		this.maxDepth = 5;
+		this.maxDepth = 7;
 		// initialize evaluation value
 		xEvaluation = 0;
 		oEvaluation = 0;
@@ -183,7 +183,7 @@ public class State {
 		}
 	}
 
-	// getters
+	// getters and setters
 	public Board[][] getGrid() {
 		return grid;
 	}
