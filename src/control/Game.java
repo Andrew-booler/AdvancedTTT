@@ -47,7 +47,10 @@ public class Game {
 					}
 					//Same steps for computer player
 					Interaction.displayBoard(game.getCurrentState());
+					long t1 = System.currentTimeMillis();
 					act = Computer.play(game.getCurrentState(),-game.getRoleSelection());
+					long t2 = System.currentTimeMillis();
+					Interaction.displayMsg("Time for search: "+(t2-t1)/1000.0+"s");
 					while (!act.validate()) {
 						if(!game.getCurrentState().isValidAction(act)) {
 							continue;
@@ -68,7 +71,12 @@ public class Game {
 				//User picks O
 				while(true) {
 					Interaction.displayBoard(game.getCurrentState());
+					long t1 = System.currentTimeMillis();
+					
+					
 					Action act = Computer.play(game.getCurrentState(),-game.getRoleSelection());
+					long t2 = System.currentTimeMillis();
+					Interaction.displayMsg("Time for search: "+(t2-t1)/1000.0+"s");
 					while ( !act.validate()) {
 						if(!game.getCurrentState().isValidAction(act)) {
 							continue;
