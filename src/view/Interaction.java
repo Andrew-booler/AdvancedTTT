@@ -59,8 +59,6 @@ public class Interaction {
 		}
 		
 		board_dis+="|---------------------|\n-----------------------";
-		state.calEvaluation();
-		board_dis+="\nx_eva= "+state.getxEvaluation()+"; o_eva= "+state.getoEvaluation();
 		System.err.println(board_dis);
 
 	}
@@ -71,16 +69,23 @@ public class Interaction {
 		try {
 			String input = stdIn.readLine();
 			String[] figures=input.split(" ");
-			return new Action(Integer.parseInt(figures[0]),Integer.parseInt(figures[1]));
+			if(figures.length>=2)
+			{
+				int gridpos=Integer.parseInt(figures[0]);
+				int boardpos=Integer.parseInt(figures[1]);
+				return new Action(gridpos,boardpos);
+			}
+			return new Action(0,0);
+			
 			
 		} catch (NumberFormatException e) {
 
-			e.printStackTrace();
-			return null;
+
+			return new Action(0,0);
 		} catch (IOException e) {
 
-			e.printStackTrace();
-			return null;
+
+			return new Action(0,0);
 		}
 		
 	}
