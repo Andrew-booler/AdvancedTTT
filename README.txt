@@ -1,4 +1,4 @@
-(a) Collaborator: Wei Zhang
+(a) Collaborator: Hao Huang
 (b) How to build:
 - Unzip the zip file.
 - Enter into the "Code" folder through terminal.
